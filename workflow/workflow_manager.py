@@ -1,5 +1,6 @@
 from agents.planner import PlannerAgent
 from agents.architect import ArchitectAgent
+from agents.security import SecurityAgent
 
 
 class WorkflowManager:
@@ -8,6 +9,7 @@ class WorkflowManager:
 
         self.planner = PlannerAgent()
         self.architect = ArchitectAgent()
+        self.security = SecurityAgent()
 
     def execute(self, requirement: str):
 
@@ -24,5 +26,16 @@ class WorkflowManager:
             architecture = self.architect.design(requirement)
 
             results["architecture"] = architecture
+
+        # Step 3
+        if "Security Advisor" in plan["selected_agents"]:
+
+            security = self.security.review(
+                requirement,
+                architecture
+            )
+
+            results["security"] = security
+        
 
         return results
