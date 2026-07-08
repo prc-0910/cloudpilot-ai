@@ -1,55 +1,24 @@
-from typing import Dict
+import json
+from pathlib import Path
 
-def analyze_request(user_input: str) -> Dict:
+from services.openai_service import client
 
-    user_input = user_input.lower()
 
-    agents = []
+class PlannerAgent:
 
-    workload = "General"
+    def analyze(self, requirement: str):
 
-    if "migrate" in user_input:
-        workload = "Migration"
+        prompt = Path("prompts/planner.txt").read_text()
 
-    if "terraform" in user_input:
-        workload = "Terraform"
+        response = client.responses.create(
+            model="gpt-5",
+            instructions=prompt,
+            input=requirement
+        )
 
-    if "cost" in user_input:
-        workload = "Cost Optimization"
-
-    if workload == "Migration":
-
-        agents = [
-            "Cloud Architect",
-            "Security Advisor",
-            "Terraform Engineer",
-            "FinOps Advisor"
-        ]
-
-    elif workload == "Terraform":
-
-        agents = [
-            "Terraform Engineer",
-            "Cloud Architect"
-        ]
-
-    elif workload == "Cost Optimization":
-
-        agents = [
-            "FinOps Advisor"
-        ]
-
-    else:
-
-        agents = [
-            "Cloud Architect"
-        ]
-
-    return {
-
-        "workload": workload,
-
-        "confidence": 95,
-
-        "agents": agents
-    }
+        try:
+            return json.loads(response.output_text)
+        except Exception:
+            return {
+                "error": response.output_text
+            }
