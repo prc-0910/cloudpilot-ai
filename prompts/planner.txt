@@ -18,9 +18,13 @@ Available Agents:
 
 Return ONLY valid JSON in this format.
 
+
 {
-  "workload": "",
-  "business_goal": "",
-  "confidence": 0,
-  "selected_agents": []
+  "workload": "...",
+  "business_goal": "...",
+  "confidence": 0.92,
+  "priority": "High",
+  "selected_agents": [
+    ...
+  ]
 }

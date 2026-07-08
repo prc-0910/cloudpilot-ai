@@ -1,0 +1,3 @@
+class SecurityAgent:
+    def review(self, requirement: str, architecture: dict):
+        ...

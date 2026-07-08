@@ -1,49 +1,24 @@
-from typing import Dict
+import json
+from pathlib import Path
 
-def design_architecture(requirement: str) -> Dict:
+from services.openai_service import client
 
-    requirement = requirement.lower()
 
-    architecture = {}
+class ArchitectAgent:
 
-    if "migrate" in requirement:
+    def design(self, requirement: str):
 
-        architecture = {
+        prompt = Path("prompts/architect.txt").read_text()
 
-            "landing_zone": "Enterprise Scale Landing Zone",
+        response = client.responses.create(
+            model="gpt-5",
+            instructions=prompt,
+            input=requirement
+        )
 
-            "network": "Hub and Spoke",
-
-            "compute": "Azure Virtual Machines",
-
-            "storage": "Premium SSD",
-
-            "backup": "Azure Backup",
-
-            "dr": "Azure Site Recovery"
-
-        }
-
-    elif "web application" in requirement:
-
-        architecture = {
-
-            "compute": "Azure App Service",
-
-            "database": "Azure SQL Database",
-
-            "network": "Application Gateway",
-
-            "security": "Web Application Firewall"
-
-        }
-
-    else:
-
-        architecture = {
-
-            "recommendation": "Need more information"
-
-        }
-
-    return architecture
+        try:
+            return json.loads(response.output_text)
+        except Exception:
+            return {
+                "error": response.output_text
+            }
