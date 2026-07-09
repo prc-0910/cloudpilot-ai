@@ -8,4 +8,8 @@ result = workflow.execute(
 
 )
 
-print(result)
+from reporting.report_generator import ReportGenerator
+
+report = ReportGenerator()
+
+print(report.generate(result))
